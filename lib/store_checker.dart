@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /* Source is where apk/ipa is available to Download */
@@ -29,7 +29,7 @@ class StoreChecker {
   /* Get origin of installed apk/ipa */
   static Future<Source> get getSource async {
     final String? sourceName = await _channel.invokeMethod('getSource');
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       if (sourceName == null) {
         // Installed apk using adb commands or side loading or downloaded from any cloud service
         return Source.IS_INSTALLED_FROM_LOCAL_SOURCE;
@@ -68,7 +68,7 @@ class StoreChecker {
         // Installed apk from Amazon app store or other markets
         return Source.IS_INSTALLED_FROM_OTHER_SOURCE;
       }
-    } else if (Platform.isIOS) {
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       if (sourceName == null) {
         // Unknown source when null on iOS
         return Source.UNKNOWN;
