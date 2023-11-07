@@ -31,6 +31,10 @@ flutter:
         pluginClass: StoreCheckerPlugin
       ios:
         pluginClass: StoreCheckerPlugin
+      windows:
+        default_package: store_checker
+        pluginClass: StoreCheckerPlugin
+
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

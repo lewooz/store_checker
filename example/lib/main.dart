@@ -113,7 +113,13 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Installed from: $source\n'),
+          child: InkWell(
+              onTap: (){
+                setState(() {
+                  initPlatformState();
+                });
+              },
+              child: Text('Installed from: $source\n')),
         ),
       ),
     );

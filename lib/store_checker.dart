@@ -28,6 +28,8 @@ class StoreChecker {
 
   /* Get origin of installed apk/ipa */
   static Future<Source> get getSource async {
+    if(defaultTargetPlatform == TargetPlatform.windows) return Source.UNKNOWN;
+
     final String? sourceName = await _channel.invokeMethod('getSource');
     if (defaultTargetPlatform == TargetPlatform.android) {
       if (sourceName == null) {
