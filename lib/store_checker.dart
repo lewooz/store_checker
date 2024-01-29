@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +20,8 @@ enum Source {
   IS_INSTALLED_FROM_OTHER_SOURCE,
   IS_INSTALLED_FROM_APP_STORE,
   IS_INSTALLED_FROM_TEST_FLIGHT,
+  IS_INSTALLED_FROM_BETA_FILE,
+  IS_INSTALLED_FROM_RELEASE_FILE,
   UNKNOWN
 }
 
@@ -28,7 +31,22 @@ class StoreChecker {
 
   /* Get origin of installed apk/ipa */
   static Future<Source> get getSource async {
-    if(defaultTargetPlatform == TargetPlatform.windows) return Source.UNKNOWN;
+
+    String _getCurrentExeName() {
+      final completePath = Platform.resolvedExecutable;
+      final pathArray = completePath.split(r'\');
+      return pathArray.last;
+    }
+
+    Source _getAppChannelOfApp() {
+      final exeName = _getCurrentExeName().toLowerCase();
+      if (exeName.contains('beta')) {
+        return Source.IS_INSTALLED_FROM_BETA_FILE;
+      }
+      return Source.IS_INSTALLED_FROM_RELEASE_FILE;
+    }
+
+    if(defaultTargetPlatform == TargetPlatform.windows) return _getAppChannelOfApp();
 
     final String? sourceName = await _channel.invokeMethod('getSource');
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -88,4 +106,6 @@ class StoreChecker {
     // Installed from Unknown source
     return Source.UNKNOWN;
   }
+
+
 }
